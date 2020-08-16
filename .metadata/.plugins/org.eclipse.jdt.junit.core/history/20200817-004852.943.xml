@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="RetailApplicationTests" project="RetailApplication" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="com.retailapplication.test.RetailApplicationTests" time="0.353" displayname="RetailApplicationTests" uniqueid="[engine:junit-vintage]/[runner:com.retailapplication.test.RetailApplicationTests]">
+    <testcase name="putProductDetailsTest" classname="com.retailapplication.test.RetailApplicationTests" time="0.264" displayname="putProductDetailsTest" uniqueid="[engine:junit-vintage]/[runner:com.retailapplication.test.RetailApplicationTests]/[test:putProductDetailsTest(com.retailapplication.test.RetailApplicationTests)]"/>
+    <testcase name="getProductDetailsTest" classname="com.retailapplication.test.RetailApplicationTests" time="0.068" displayname="getProductDetailsTest" uniqueid="[engine:junit-vintage]/[runner:com.retailapplication.test.RetailApplicationTests]/[test:getProductDetailsTest(com.retailapplication.test.RetailApplicationTests)]"/>
+    <testcase name="getProductDetailsInvalidRequestTest" classname="com.retailapplication.test.RetailApplicationTests" time="0.022" displayname="getProductDetailsInvalidRequestTest" uniqueid="[engine:junit-vintage]/[runner:com.retailapplication.test.RetailApplicationTests]/[test:getProductDetailsInvalidRequestTest(com.retailapplication.test.RetailApplicationTests)]"/>
+  </testsuite>
+</testrun>

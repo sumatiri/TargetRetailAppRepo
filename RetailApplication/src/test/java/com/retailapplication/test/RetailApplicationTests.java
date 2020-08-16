@@ -1,0 +1,103 @@
+package com.retailapplication.test;
+
+import java.math.BigDecimal;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+
+import com.retailapplication.controller.RetailAppController;
+import com.retailapplication.model.PriceInfo;
+import com.retailapplication.model.Product;
+import com.retailapplication.service.ProductServiceImpl;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes=RetailAppController.class)
+@WebMvcTest(value=RetailAppController.class)
+@AutoConfigureMockMvc
+public class RetailApplicationTests {
+	@Autowired
+	private MockMvc mockMvc;
+	
+    @MockBean
+    @Qualifier(value="productService")
+    private  ProductServiceImpl productService;
+	
+    private int prod_id=13860427;
+
+	Product prod=null;
+	PriceInfo priceInfo= new PriceInfo();
+	@Before
+	public void setup() {
+		priceInfo.setId(prod_id);
+		priceInfo.setCurrencyCode("USD");
+		priceInfo.setValue(new BigDecimal(2000));
+		prod= new Product(prod_id,"The Big Lebowski (Blu-ray)",priceInfo);
+	}
+	
+	
+	@Test
+	public void getProductDetailsTest() throws Exception {
+		Mockito.when(productService.getProductData(prod_id)).thenReturn(prod);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+				"/products/"+prod_id).accept(
+				MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		String expected = "{\"id\":13860427,\"name\":\"The Big Lebowski (Blu-ray)\",\"currentPrice\":{\"value\":2000,\"currencycode\":\"USD\"}}";
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+	
+	@Test(expected = MethodArgumentTypeMismatchException.class)
+	public void getProductDetailsInvalidRequestTest() throws Exception,MethodArgumentTypeMismatchException {
+		String var="XYZ";
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+				"/products/"+var).accept(
+				MediaType.APPLICATION_JSON);
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		Assert.assertEquals(HttpStatus.BAD_REQUEST.value(),result.getResponse().getStatus());
+			throw 	result.getResolvedException();
+	}
+	
+	@Test
+	public void putProductDetailsTest() throws Exception{
+		PriceInfo priceInfo= new PriceInfo();
+		priceInfo.setId(prod_id);
+		priceInfo.setCurrencyCode("Rupee");
+		priceInfo.setValue(new BigDecimal(300));
+		Product prodDetails1= new Product(prod_id,"The Big Lebowski (Blu-ray)",priceInfo);
+		
+		Mockito.when(productService.updateProductPrice(prod_id, prodDetails1)).thenReturn(prodDetails1);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put(
+				"/products/"+prod_id)
+				.accept(MediaType.APPLICATION_JSON)
+				.content("{\"id\":"+prod_id+",\"name\":\"The Big Lebowski (Blu-ray)\",\"productPrice\":{\"price\":300,\"currencyCode\":\"Rupee\"}}")
+				.contentType(MediaType.APPLICATION_JSON_VALUE);
+		
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		Assert.assertEquals(HttpStatus.OK.value(),result.getResponse().getStatus());
+	}
+
+
+}
+
+

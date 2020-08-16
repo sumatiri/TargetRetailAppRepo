@@ -1,0 +1,14 @@
+package com.retailapplication.repository;
+
+package com.retailapplication.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import com.retailapplication.model.PriceInfo;
+@Repository
+public interface PriceInfoRepository extends MongoRepository<PriceInfo, Integer>{
+	public PriceInfo findById(int id);
+}

@@ -1,0 +1,5 @@
+package com.retailapplication.repository;
+
+public class ProductInfo {
+
+}

@@ -1,0 +1,5 @@
+package com.retailapplication.exception;
+
+public class CustomException {
+
+}
