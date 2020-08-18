@@ -18,14 +18,14 @@ Please insert few records in this collection using:
      db.productinfo.insert({"_id":13860428,"name":"The Big Lebowski(Blu-Ray)(WideScreen)"})
 
      db.productinfo.insert({"_id":13860427,"name":"MacBook Air"})
-WriteResult({ "nInserted" : 1 })
+
 
 
 2)	priceinfo – This is for price information as mentioned in the case study document. Please insert few records in this collection using:
 
  db.priceinfo.insert({"_id":13860429,"value":"1500","currencyCode":"USD"})
-db.priceinfo.insert({"_id":13860427,"value":"1500","currencyCode":"USD"})
-
+db.priceinfo.insert({"_id":13860427,"value":"1800","currencyCode":"USD"})
+db.priceinfo.insert({"_id":13860428,"value":"1900","currencyCode":"USD"})
 
 # Build, test, Run the application
 
