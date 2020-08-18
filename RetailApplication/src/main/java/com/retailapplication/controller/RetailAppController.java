@@ -1,6 +1,8 @@
 package com.retailapplication.controller;
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +21,16 @@ import com.retailapplication.service.ProductService;
 @RestController
 @RequestMapping("/")
 public class RetailAppController {
+	private final Logger logger=LogManager.getLogger(RetailAppController.class.getName());
     @Autowired
     @Qualifier(value="productService")
     ProductService prodService;
     
 	@RequestMapping(value = "/products/{id}")
 	   public Product getProduct(@PathVariable int id) throws MongoException, IOException {
-		 Product prod= prodService.getProductData(id);
-		
+		logger.info("Working on the GET request, fetching the product details ");
+		Product prod= prodService.getProductData(id);
+		logger.info("Returning  the product details ");
 	     return prod;
 	   }
 	
@@ -41,9 +45,10 @@ public class RetailAppController {
 	
 	@RequestMapping(value = "/products/{id}",method=RequestMethod.PUT)
 	   public Product getProductName(@PathVariable int id,@RequestBody Product prod) throws Exception {
-		
+		 logger.info("Working on the PUT request, updating the product details ");
 		 Product prodInfo=prodService.updateProductPrice(id, prod);
-	     return prodInfo;
+		 logger.info("Updated the product details ");
+		 return prodInfo;
 		
 	   }
 }

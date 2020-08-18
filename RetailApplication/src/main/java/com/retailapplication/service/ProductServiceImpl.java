@@ -4,6 +4,8 @@ package com.retailapplication.service;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.mongodb.MongoException;
+
 import com.retailapplication.model.PriceInfo;
 import com.retailapplication.model.Product;
 import com.retailapplication.model.ProductInfo;
@@ -19,7 +22,7 @@ import com.retailapplication.repository.PriceInfoRepository;
 import com.retailapplication.repository.ProductInfoRepository;
 @Service(value="productService")
 public class ProductServiceImpl implements ProductService{
-
+	private final Logger logger=LogManager.getLogger(ProductServiceImpl.class.getName());
 	@Autowired
     private ProductInfoRepository prodInfoRepo;
     
@@ -33,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
 	 * 
 	 */
 	public PriceInfo getPriceDetails(int id) {
-		 
+		logger.info("Fetching price details from repository");
 	 
 		 PriceInfo priceInfo=priceInfoRepo.findById(id);
 	  
@@ -47,6 +50,7 @@ public class ProductServiceImpl implements ProductService{
 
 	public String getProductName(int id) throws Exception {
      try {
+    	logger.info("Fetching the product name from external API"); 
 		String url = env.getProperty("target.restUrl1") + id;
 		RestTemplate restTemplate = new RestTemplate();
 		String resp = restTemplate.getForObject(url, String.class);
@@ -56,12 +60,15 @@ public class ProductServiceImpl implements ProductService{
 		Map<String, Object> map = springParser.parseMap(resp);
 
 		if (map != null) {
+			logger.info("Product name is "+name);
 			name = (String) map.get("name");
 			return name;
 		}else {
+			logger.error("Error in finding product name");
 			throw new Exception("Product Name not found from external API");
 		}
      }catch(Exception e) {
+    	 logger.error("Error in finding product name");
     	 throw new Exception("Product Name not found from external API");
      }
 
@@ -85,14 +92,17 @@ public class ProductServiceImpl implements ProductService{
 				pd.setcurrentPrice(pinfo);
 				return pd;
 			} else {
+				logger.error("Error in finding product details for the ID given");
 				throw new MongoException("Product details not found");
 				
 			}
 			
 		}else {
+			logger.error("Error in finding product details for the ID given");
 			throw new MongoException("Product details not found");
 		}
 	 }catch(Exception e){
+		 logger.error("Error in finding product details for the ID given");
 		 throw new MongoException("Invalid Product ID provided in the URL. Product Information not found");
 	 }
 		
@@ -109,6 +119,7 @@ public class ProductServiceImpl implements ProductService{
 	public Product updateProductPrice(int id, Product prod) throws Exception {
 		try {
 			 if(prod.getId()!=id) {
+				   logger.error("Error in finding product details for the ID given");
 		         	throw new Exception("Product ID provided in request body doesnt match with Product ID in URL");
 		     }
 			String productName = getProductName(id);
@@ -128,14 +139,16 @@ public class ProductServiceImpl implements ProductService{
 					prodToReturn.setId(id);
 					return prodToReturn;
 				} else {
-
+					logger.error("Error in finding product details for the ID given");
 					throw new MongoException("Product Information is not Present for Updating");
 
 				}
 			} else {
+				logger.error("Error in finding product details for the ID given");
 				throw new MongoException("Product Information is not Present for Updating");
 			}
 		} catch (Exception e) {
+			logger.error("Error in finding product details for the ID given");
 			throw new MongoException(
 					"Error occured while fetching Product Information. Please check the Product ID provided either in body or in URL");
 		}
