@@ -96,18 +96,19 @@ This has  two collections:
 1)	productinfo – Since the target API was not working. This acts like dummy external API from which Product Name is fetched.
 Please insert few records in this collection using:
 
-     db.productinfo.insert({"_id":13860429,"name":"The Flat-      Screen(Blu-Ray)"})
+     db.productinfo.insert({"_id":13860429,"name":"The Flat-Screen(Blu-Ray)"})
 
      db.productinfo.insert({"_id":13860428,"name":"The Big Lebowski(Blu-Ray)(WideScreen)"})
 
      db.productinfo.insert({"_id":13860427,"name":"MacBook Air"})
-WriteResult({ "nInserted" : 1 })
+
 
 
 2)	priceinfo – This is for price information as mentioned in the case study document. Please insert few records in this collection using:
 
  db.priceinfo.insert({"_id":13860429,"value":"1500","currencyCode":"USD"})
-db.priceinfo.insert({"_id":13860427,"value":"1500","currencyCode":"USD"})
+ db.priceinfo.insert({"_id":13860428,"value":"500","currencyCode":"USD"})
+ db.priceinfo.insert({"_id":13860427,"value":"1500","currencyCode":"Pound"})
 
 
 # Build, test, Run the application
